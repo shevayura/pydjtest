@@ -1,5 +1,6 @@
 import os
 # Django settings for pydjtest project.
+#testing git
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
