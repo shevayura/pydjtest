@@ -1,7 +1,5 @@
 import os
 # Django settings for pydjtest project.
-#testing git
-#qwerty 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,7 +13,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(os.path.abspath(os.curdir), 'sqlite_secret.db'),      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(os.path.dirname(__file__), 'sqlite_secret.db'),      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -48,7 +46,7 @@ USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(os.path.abspath(os.curdir), '/media/')
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -59,7 +57,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(os.path.abspath(os.curdir), '/static/')
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), '/static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -106,13 +104,14 @@ ROOT_URLCONF = 'pydjtest.urls'
 WSGI_APPLICATION = 'pydjtest.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.abspath(os.curdir), '/templates/'),
+    os.path.join(os.path.dirname(__file__), '/templates/'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
+    'pydjtest',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
