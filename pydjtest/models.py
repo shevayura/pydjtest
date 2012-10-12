@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import django.db.models as models
 import os
 from pydjtest.settings import MEDIA_ROOT

@@ -1,4 +1,5 @@
 import os
+from django.conf import global_settings
 # Django settings for pydjtest project.
 
 DEBUG = True
@@ -97,6 +98,11 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    "pydjtest.processors.request_to_context",
+)
+
 
 ROOT_URLCONF = 'pydjtest.urls'
 
