@@ -61,7 +61,7 @@ def productEdit(request, id):
     context = RequestContext(request, {
                     "form": form,
                     'product':product,
-                    'messages':messages
+                    'xmess':messages,
                     })
                     
     return render_to_response('edit.html', context)

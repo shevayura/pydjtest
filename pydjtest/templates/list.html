@@ -38,7 +38,7 @@
                     heigth: {{product.heigth}}
                 </div>
                 <div class="span1">
-                    Color: <span class="product-color" style="background-color: #{{product.color}}"></span>
+                    Color: <span class="product-color" style="background-color: {{product.color}}"></span>
                 </div>
                 <div class="span1">
                     {% if user.is_superuser and user.is_active %}
