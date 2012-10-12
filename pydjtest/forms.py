@@ -8,10 +8,9 @@ class ProductColorWidget(forms.Widget):
 
     def render(self, name, value, attrs=None):
         if value is None: value = ''
-        final_attrs = self.build_attrs(attrs, name=name)
-        out = '''
-            <input type="text" id="id_%s" name="%s" value="%s" class="colorpicker" %s />
-            <script>$(".colorpicker").colorpicker()</script>''' % (name, name, value, final_attrs);
+        out = u'''
+            <input type="text" id="id_%s" name="%s" value="%s" class="colorpicker" />
+            <script>$(".colorpicker").colorpicker()</script>''' % (name, name, value);
         return mark_safe(out)
 
 class ProductForm(forms.ModelForm):
