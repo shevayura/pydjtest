@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{product.name}}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="row">
+        <div class="span8 offset2">
+            <div class="page-header">
+                <h1>{{product.name}}</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span3 offset2">
+            <img src="{{product.photo.url}}" />
+        </div>
+        <div class="span6">
+            <div class="row">
+                <div class="span2">
+                    weight: {{product.weight}} lb.
+                </div>
+                <div class="span2">
+                    heigth {{product.heigth}} inch
+                </div>
+                <div class="span1">
+                    Color: <span class="product-color" style="background-color: #{{product.color}}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span5">
+                    {{product.desc|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

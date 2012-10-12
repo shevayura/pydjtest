@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{{title}}{% endblock %} - hello world!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/main.css" rel="stylesheet">
+    {% block head %}{% endblock %}
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+  </head>
+  <body>
+      <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+              <div class="container">
+                  <a class="brand" href="/">
+                      Hello world!
+                  </a>
+                  <div class="nav-collapse">
+                    <ul class="nav">
+                      <li {% if main_active %}class="active"{% endif %}><a href="/">Home</a></li>
+                    </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% block content %}
+      {% endblock %}
+  </body>
+</html>
