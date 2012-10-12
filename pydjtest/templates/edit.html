@@ -2,9 +2,74 @@
 
 
 {% block head %}
-<link href="/static/css/colorpicker.css" rel="stylesheet" />
-<script src="/static/js/jquery-1.8.0.min.js"></script>
-<script src="/static/js/bootstrap-colorpicker.js"></script>
+    <link href="/static/css/colorpicker.css" rel="stylesheet" />
+    <script src="/static/js/jquery-1.8.0.min.js"></script>
+    <script src="/static/js/bootstrap-colorpicker.js"></script>
+
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
+    <script>
+        form_registered_fields = [];
+        $(document).ready(function() {
+            $('#productEditForm').ajaxForm({beforeSubmit: formPreSubmit, success: formPostSubmit, uploadProgress: formUploadProgress});
+        });
+
+        function formPreSubmit(formData, jqForm, options){
+            formHide();
+            $("#formProgressBar").width("0%");
+            $("#formAlertOk").css('display', 'none');
+            $("#formAlertError").css('display', 'none');
+            //clear old errors
+            for (var k in form_registered_fields){
+                $("#err_"+form_registered_fields[k]).html("");
+                $("#main_"+form_registered_fields[k]).toggleClass('error', false);
+            }
+        }
+        function formPostSubmit(responseText, statusText, xhr, form){
+            data = jQuery.parseJSON(responseText)
+            if (data['status'] == 'ok'){
+                $("#formAlertOk").css('display', 'block');
+            }
+            else{
+                $("#formAlertError").css('display', 'block');
+                for ( var fname in data.errors ){
+                    field = $("#err_"+fname);
+                    if (!field) continue;
+                    field.html(data.errors[fname]);
+                    $("#main_"+fname).addClass('error');
+                    form_registered_fields.push(fname);
+                }
+            }
+            formShow();
+            $("#formProgressBar").width("100%");
+
+            if (data.photo) $("#formPhotoImage").attr('src', data.photo);
+            if (data.name){
+                $("#formLegend").html(data.name);
+                document.title =  'Edit "'+data.name+'"';
+            }
+        }
+
+        function formUploadProgress(event, position, total, percentComplete) {
+            $("#formProgressBar").width(percentComplete+"%");
+        }
+
+        function formHide(){
+            form = $("#productEditForm");
+            over = $("#form_overlay");
+            over.css('position', 'absolute');
+            over.css('display', 'block');
+            over.css('background-color', 'gray');
+            over.css('opacity', '0.4');
+            over.css('filter', 'alpha(opacity=40)');
+            over.offset(form.offset());
+            over.height(form.height()+10);
+            over.width( form.width()+10);
+        }
+        function formShow(){
+            $("#form_overlay").css('display', 'none');
+        }
+    </script>
 {% endblock %}
 
 {% block title %}Edit &quot;{{product.name}}&quot;{% endblock %}
@@ -14,112 +79,117 @@
 
 <div class="row">
     <div class="span8 offset2">
-        <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+        <div id="form_overlay" style="display: none; background-color: gray; "></div>
+        <form class="form-horizontal" method="POST" enctype="multipart/form-data" id="productEditForm">
           <fieldset>
-            <legend>Edit &quot;{{product.name}}&quot;</legend>
+            <legend>Edit &quot;<span id="formLegend">{{product.name}}</span>&quot;</legend>
 
             {% csrf_token %}
 
-            {% for m in xmess.good %}
-            <div class="alert alert-success">{{m}}</div>
-            {% endfor %}
-            {% for m in xmess.error %}
-            <div class="alert alert-error">{{m}}</div>
-            {% endfor %}
+            <div class="alert alert-success" id="formAlertOk"    style="display: none;">
+                Saved!
+            </div>
+
+            <div class="alert alert-error"   id="formAlertError" style="display: none;">
+                Error! Wrong data in fields!
+            </div>
 
             {% with f=form.name %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.alias %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.weight %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.heigth %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.short_desc %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                       <textarea class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}">{% if f.value %}{{f.value}}{% endif %}</textarea>
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.desc %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                       <textarea class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}">{% if f.value %}{{f.value}}{% endif %}</textarea>
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
             {% endwith %}
 
             {% with f=form.color %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="text" class="input-xlarge colorpicker" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                 </div>
                 <script>$(".colorpicker").colorpicker()</script>
             {% endwith %}
 
             {% with f=form.photo %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
+                <div class="control-group {% if f.errors %}error{% endif %}" id="main_{{f.name}}">
                   <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
                   <div class="controls">
                     <input type="file" class="input-file" id="id_{{f.name}}" name="{{f.name}}"
                            value="{% if f.value %}{{f.value}}{% endif %}">
-                    <span class="help-inline">{{f.errors}}</span>
+                    <span class="help-inline" id="err_{{f.name}}">{{f.errors}}</span>
                   </div>
                   {% if product.photo %}
                   <p class="help-block" style="text-align: center;">
+                      <div class="progress">
+                          <div class="bar" style="width: 0%;" id="formProgressBar"></div>
+                      </div>
                       <a href="javascript: document.getElementById('preview').style.display =  document.getElementById('preview').style.display == 'none' ? 'inline' : 'none';">
                           show/hide preview
                       </a>
 
                       <span id="preview" class="thumbnail" style="display: none;">
                           {% load thumbnail %}
-                          <img src="{% thumbnail product.photo 300x300 %}" alt="" />
+                          <img src="{% thumbnail product.photo 300x300 %}" alt="" id="formPhotoImage"/>
                       </span>
                   </p>
                   {% endif %}

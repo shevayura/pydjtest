@@ -1,7 +1,10 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator
 from django.template import RequestContext
+
+from easy_thumbnails.files import get_thumbnailer
+import json
 
 from pydjtest import models, admin, forms
 
@@ -43,25 +46,34 @@ def productEdit(request, id):
         raise Http404 #bad id or product with this id is not exist
 
     form = None
-    messages = {'good':[], 'error':[]}
 
     if request.method == 'POST':
+        response = {}
         form = forms.ProductForm(request.POST, request.FILES, instance=product)
         #check form
         if form.is_valid():
             form.save()
-            messages['good'].append("Saved!")
+            response['status'] = 'ok'
         else:
-            messages['error'].append("Error in form")
+            response['status'] = 'error'
+            response['errors'] = {}
+
+            #create errors array
+            for f in form.fields:
+                if not form[f].errors: continue
+                response['errors'][f] = form[f].errors
+        #create img url for preview
+        response['photo'] = get_thumbnailer(product.photo).get_thumbnail({'size': (300, 300), 'crop': True}).url
+        response['name']  = product.name;
+        return HttpResponse(json.dumps(response))
 
     if request.method == 'GET':
         #create form
         form = forms.ProductForm(instance=product)
 
-    context = RequestContext(request, {
-                    "form": form,
-                    'product':product,
-                    'xmess':messages,
-                    })
+        context = RequestContext(request, {
+                        "form": form,
+                        'product':product,
+                        })
                     
-    return render_to_response('edit.html', context)
+        return render_to_response('edit.html', context)
