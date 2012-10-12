@@ -10,7 +10,6 @@ def product_changed(sender, **kwargs):
     mail_body = ''
     subject   = ''
 
-    f = open("/home/shevayura/qweqwe.txt", 'wb')
     if kwargs['signal'] is post_save:
         #save
         mail_body = template.loader.get_template('signal_save.html').render(template.Context(kwargs))

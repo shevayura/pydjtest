@@ -74,5 +74,6 @@
 your ip is {{request.META.REMOTE_ADDR}}
 {% if user.is_superuser and user.is_active %}
 ok{%else%}no{% endif %}
+{{settings.TIME_ZONE}}
 -->
 {% endblock %}
