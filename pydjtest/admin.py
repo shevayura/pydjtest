@@ -19,5 +19,8 @@ class ProductsAdmin(admin.ModelAdmin):
             "/static/js/bootstrap-colorpicker.js",
             )
 
+class RequestAdmin(admin.ModelAdmin):
+    list_display = ('url', 'method', 'code', 'time');
 
 admin.site.register(models.Products, ProductsAdmin)
+admin.site.register(models.Request,  RequestAdmin)

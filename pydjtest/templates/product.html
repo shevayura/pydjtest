@@ -38,4 +38,26 @@
     </div>
 </div>
 
+{% load rand_products %}
+{% rand_products 2 %}
+
+<div class="row" style="height: 50px;"></div>
+<div class="row">
+    <div class="span4 offset2">
+        <h3>Random products</h3>
+    </div>
+</div>
+{% for p in rand_products %}
+<div class="row">
+    <div class="span1 offset2">
+        <a href="/product/{{p.alias}}/" class="thumbnail">
+            <img src="{{p.photo.url}}" alt="" style="max-width: 50px; max-height: 50px"/>
+        </a>
+    </div>
+    <div class="span2">
+        <a href="/product/{{p.alias}}/">{{p.name}}</a>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

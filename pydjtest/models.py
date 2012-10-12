@@ -15,3 +15,11 @@ class Products(models.Model):
 
     color      = models.CharField(max_length=255, verbose_name="Color")
     photo      = models.ImageField(upload_to='photos', verbose_name="Product photo")
+
+class Request(models.Model):
+    id         = models.AutoField(primary_key=True)
+    url        = models.CharField(max_length=255, verbose_name="URL")
+    method     = models.CharField(max_length=255, verbose_name="Method")
+    code       = models.CharField(max_length=255, verbose_name="Response code")
+    time       = models.DateField(auto_now_add=True)
+

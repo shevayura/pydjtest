@@ -10,7 +10,7 @@ from pydjtest import models, admin, forms
 
 
 def productList(request, page=1):
-    page = int(page)
+    page = int(page) #escape
     products = models.Products.objects.all()
     paginator = Paginator(products, 2)
     try:
