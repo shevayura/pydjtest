@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^$', views.productList),
     url(r'^list/(?P<page>\d+)/$', views.productList),
     url(r'^product/(?P<alias>[\w\d_-]+)/$', views.productPage),
+    url(r'^edit/(?P<id>\d+)/$', views.productEdit),
     
     url(r'^admin/', include(admin.site.urls)),
 )

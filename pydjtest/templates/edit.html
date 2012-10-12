@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit &quot;{{product.name}}&quot;{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="span8 offset2">
+        <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+          <fieldset>
+            <legend>Edit &quot;{{product.name}}&quot;</legend>
+
+            {% csrf_token %}
+
+            {% for m in messages.good %}
+            <div class="alert alert-success">{{m}}</div>
+            {% endfor %}
+            {% for m in messages.error %}
+            <div class="alert alert-error">{{m}}</div>
+            {% endfor %}
+
+            {% with f=form.name %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.alias %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.weight %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.heigth %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.short_desc %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                      <textarea class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}">{% if f.value %}{{f.value}}{% endif %}</textarea>
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.desc %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                      <textarea class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}">{% if f.value %}{{f.value}}{% endif %}</textarea>
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.color %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                </div>
+            {% endwith %}
+
+            {% with f=form.photo %}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                  <label class="control-label" for="id_{{f.name}}">{{f.label}}</label>
+                  <div class="controls">
+                    <input type="file" class="input-file" id="id_{{f.name}}" name="{{f.name}}"
+                           value="{% if f.value %}{{f.value}}{% endif %}">
+                    <span class="help-inline">{{f.errors}}</span>
+                  </div>
+                  {% if product.photo %}
+                  <p class="help-block" style="text-align: center;">
+                      <a href="javascript: document.getElementById('preview').style.display =  document.getElementById('preview').style.display == 'none' ? 'inline' : 'none';">
+                          show/hide preview
+                      </a>
+                      <span id="preview" class="thumbnail" style="display: none;">
+                          {% load thumbnail %}
+                          <img src="{% thumbnail product.photo 300x300 %}" alt="" />
+                      </span>
+                  </p>
+                  {% endif %}
+                </div>
+            {% endwith %}
+
+            <div class="control-group">
+              <div class="controls">
+                <input type="submit" class="btn" value="save" />
+              </div>
+            </div>
+          </fieldset>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

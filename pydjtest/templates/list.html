@@ -4,6 +4,8 @@
 
 {% block content %}
 
+{% load thumbnail %}
+
 <div class="row">
     <div class="span8 offset2">
         <div class="page-header">
@@ -24,7 +26,7 @@
     <div class="row">
         <div class="span2 offset2">
             <a href="/product/{{product.alias}}/" class="thumbnail">
-                <img src="{{product.photo.url}}" alt="">
+                <img src="{{product.photo.url}}" alt="" />
             </a>
         </div>
         <div class="span6">
@@ -35,8 +37,13 @@
                 <div class="span2">
                     heigth: {{product.heigth}}
                 </div>
-                <div class="span2">
+                <div class="span1">
                     Color: <span class="product-color" style="background-color: #{{product.color}}"></span>
+                </div>
+                <div class="span1">
+                    {% if user.is_superuser and user.is_active %}
+                    <a class="btn" href="/edit/{{product.id}}/">Edit</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="row">
@@ -65,5 +72,7 @@
 
 <!-- {{testvar}}
 your ip is {{request.META.REMOTE_ADDR}}
+{% if user.is_superuser and user.is_active %}
+ok{%else%}no{% endif %}
 -->
 {% endblock %}
