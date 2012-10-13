@@ -16,6 +16,9 @@ class ProductColorWidget(forms.Widget):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Products
+        widgets = {
+          'color': ProductColorWidget(),
+        }
 
 class ProductFormAdmin(forms.ModelForm):
     class Meta:

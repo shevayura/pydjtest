@@ -2,11 +2,13 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator
 from django.template import RequestContext
+from django import template
+from django.template.response import TemplateResponse
 
 from easy_thumbnails.files import get_thumbnailer
 import json
 
-from pydjtest import models, admin, forms
+from pydjtest import models, admin, forms, middlewares
 
 
 def productList(request, page=1):
@@ -18,10 +20,7 @@ def productList(request, page=1):
     except:
         raise Http404
 
-    context = RequestContext(request, {})
-    context['products']    = products
-    context['main_active'] = 1
-    return render_to_response('list.html', context)
+    return TemplateResponse(request, 'list.html', {'products': products, 'main_active':1})
 
 
 def productPage(request, alias):
@@ -31,10 +30,8 @@ def productPage(request, alias):
         product = None
     if not product:
         raise Http404
-
-    context = RequestContext(request, {"product": product})
-
-    return render_to_response('product.html', context)
+    
+    return TemplateResponse(request, 'product.html', {'product': product})
 
 def productEdit(request, id):
     if not request.user.is_active or not request.user.is_superuser:
@@ -49,31 +46,25 @@ def productEdit(request, id):
 
     if request.method == 'POST':
         response = {}
+        saved    = False
         form = forms.ProductForm(request.POST, request.FILES, instance=product)
         #check form
         if form.is_valid():
             form.save()
             response['status'] = 'ok'
+            saved = True
         else:
             response['status'] = 'error'
-            response['errors'] = {}
 
-            #create errors array
-            for f in form.fields:
-                if not form[f].errors: continue
-                response['errors'][f] = form[f].errors
-        #create img url for preview
-        response['photo'] = get_thumbnailer(product.photo).get_thumbnail({'size': (300, 300), 'crop': True}).url
-        response['name']  = product.name;
-        return HttpResponse(json.dumps(response))
+        context = RequestContext(request, { 'product':product, 'form':form, 'saved':saved })
+        response['form'] = template.loader.get_template('form.html').render(context)
+        response['name'] = product.name
+        resp = TemplateResponse(request, '')
+        resp.content = json.dumps(response)
+        return resp
+        #return HttpResponse(json.dumps(response))
 
     if request.method == 'GET':
         #create form
         form = forms.ProductForm(instance=product)
-
-        context = RequestContext(request, {
-                        "form": form,
-                        'product':product,
-                        })
-                    
-        return render_to_response('edit.html', context)
+        return TemplateResponse(request, 'edit.html', {"form": form, 'product': product})

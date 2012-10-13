@@ -1,0 +1,36 @@
+<fieldset>
+    <legend>Edit &quot;<span id="formLegend">{{product.name}}</span>&quot;</legend>
+    {% if saved %}
+    <div class="alert alert-success">
+        Saved!
+    </div>
+    {% endif %}
+
+    {% if form.errors %}
+    <div class="alert alert-error">
+        Error! Wrong data in fields!
+    </div>
+    {% endif %}
+
+    {% csrf_token %}
+    
+    {{form}}
+
+    {% load thumbnail %}
+
+    <a href="javascript: $('#formThumb').css('display', $('#formThumb').css('display') == 'none' ? 'block' : 'none');">Show/Hide</a>
+    <a href="{{product.photo.url}}/" class="thumbnail" id="formThumb" style="display: none;">
+        <img src="{% thumbnail product.photo 300x300 crop %}" />
+    </a>
+
+
+    <div class="progress" id="formProgressBarContainer" style="display: none;">
+      <div class="bar" id="formProgressBar" style="width: 0%;"></div>
+    </div>
+
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit" class="btn" value="save" />
+        </div>
+    </div>
+</fieldset>
